@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 @Builder
 @Data
-//this is a read-only class so properties are final
 public class CreateProductCommand {
 
     @TargetAggregateIdentifier

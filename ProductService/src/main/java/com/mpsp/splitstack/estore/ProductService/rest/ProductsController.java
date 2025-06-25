@@ -29,7 +29,7 @@ public class ProductsController {
                 .build();
         String returnValue;
         try {
-            returnValue = commandGateway.sendAndWait(createProductCommand); //returns a completable object immediately - makes it async
+            returnValue = commandGateway.sendAndWait(createProductCommand); //returns a completable object immediately
         } catch (Exception e) {
             returnValue = e.getMessage();
         }
