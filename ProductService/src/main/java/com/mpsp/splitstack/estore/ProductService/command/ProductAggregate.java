@@ -1,6 +1,7 @@
 package com.mpsp.splitstack.estore.ProductService.command;
 
 import com.mpsp.splitstack.estore.ProductService.core.events.ProductCreatedEvent;
+import com.mpsp.splitstack.estore.ProductService.command.utils.CreateCommandValidator;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -11,10 +12,10 @@ import org.springframework.beans.BeanUtils;
 import java.math.BigDecimal;
 
 @Aggregate
+// Axon automatically creates EventSourcingRepository<ProductAggregate>
+// and saves to the Events Store all events with this aggregateId
 public class ProductAggregate {
 
-    private static final String PRICE_ERROR_MESSAGE = "Price must be greater than zero";
-    private static final String TITLE_ERROR_MESSAGE = "Title cannot be null or blank";
     @AggregateIdentifier //what will uniquely identify this aggregate
     private String productId;
     private String title;
@@ -28,7 +29,7 @@ public class ProductAggregate {
     // this constructor is used as a command handler method and will be invoked when the CreateProductCommand is dispathced
     @CommandHandler
     public ProductAggregate(CreateProductCommand createProductCommand) {
-        validateCreateProductCommand(createProductCommand);
+        CreateCommandValidator.validateCreateProductCommand(createProductCommand);
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent();
         BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
         // dispatch the event to all event handlers inside this aggregate, so that the state of this aggregate can be updated with new information (EventSourcingHandler annotated method 'on()')
@@ -49,22 +50,7 @@ public class ProductAggregate {
 
 
 
-    private void validateCreateProductCommand(CreateProductCommand command) {
-        validatePrice(command.getPrice());
-        validateTitle(command.getTitle());
-    }
 
-    private void validatePrice(BigDecimal price) {
-        if (price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(PRICE_ERROR_MESSAGE);
-        }
-    }
-
-    private void validateTitle(String title) {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException(TITLE_ERROR_MESSAGE);
-        }
-    }
 
 
 }

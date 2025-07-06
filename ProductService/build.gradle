@@ -32,11 +32,11 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.5.3'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.3.0'
-	// https://mvnrepository.com/artifact/org.axonframework/axon-spring-boot-starter
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.5.3'
 	implementation 'org.axonframework:axon-spring-boot-starter:4.11.1'
-	// https://mvnrepository.com/artifact/com.google.guava/guava
+	testImplementation 'com.h2database:h2:2.3.232'
 	implementation 'com.google.guava:guava:33.4.8-jre'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
