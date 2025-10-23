@@ -3,6 +3,7 @@ package com.mpsp.splitstack.estore.ProductService.query;
 import com.mpsp.splitstack.estore.ProductService.core.data.ProductEntity;
 import com.mpsp.splitstack.estore.ProductService.core.data.ProductsRepository;
 import com.mpsp.splitstack.estore.ProductService.core.events.ProductCreatedEvent;
+import com.mpsp.splitstack.estore.ProductService.core.events.ProductPriceUpdatedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
@@ -84,5 +85,13 @@ public class ProductEventsHandler {
         productsRepository.save(productEntity);
 
 //        if(true) throw new Exception("Error coming from ProductEventsHandler");
+    }
+
+    @EventHandler
+    public void on(ProductPriceUpdatedEvent event) {
+        productsRepository.findById(event.getProductId()).ifPresent(product -> {
+            product.setPrice(event.getPrice());
+            productsRepository.save(product);
+        });
     }
 }

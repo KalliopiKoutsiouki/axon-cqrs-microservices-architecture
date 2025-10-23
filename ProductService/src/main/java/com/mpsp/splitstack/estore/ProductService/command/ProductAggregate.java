@@ -1,7 +1,8 @@
 package com.mpsp.splitstack.estore.ProductService.command;
 
+import com.mpsp.splitstack.estore.ProductService.command.utils.ProductCommandValidator;
 import com.mpsp.splitstack.estore.ProductService.core.events.ProductCreatedEvent;
-import com.mpsp.splitstack.estore.ProductService.command.utils.CreateCommandValidator;
+import com.mpsp.splitstack.estore.ProductService.core.events.ProductPriceUpdatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -67,8 +68,8 @@ public class ProductAggregate {
      */
 
     @CommandHandler
-    public ProductAggregate(CreateProductCommand createProductCommand){
-        CreateCommandValidator.validateCreateProductCommand(createProductCommand);
+    public ProductAggregate(CreateProductCommand createProductCommand) {
+        ProductCommandValidator.validateCreateProductCommand(createProductCommand);
         ProductCreatedEvent productCreatedEvent = new ProductCreatedEvent();
         BeanUtils.copyProperties(createProductCommand, productCreatedEvent);
         /*
@@ -97,16 +98,30 @@ public class ProductAggregate {
     // Exception that is thrown inside the CommandHandler (CommandExecutionException) method - the eventsourcinghandler will not proceed - the product will not be persisted in the event store
     @EventSourcingHandler
     // we avoid calling any business logic and use it only to update the aggregate
-    public void on(ProductCreatedEvent productCreatedEvent){
+    public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
         this.title = productCreatedEvent.getTitle();
         this.price = productCreatedEvent.getPrice();
         this.quantity = productCreatedEvent.getQuantity();
     }
 
+    @CommandHandler
+    public void on(UpdateProductPriceCommand updateProductPriceCommand) {
+        ProductCommandValidator.validateUpdateProductPriceCommand(updateProductPriceCommand);
+        ProductPriceUpdatedEvent productPriceUpdatedEvent = new ProductPriceUpdatedEvent();
+        BeanUtils.copyProperties(updateProductPriceCommand, productPriceUpdatedEvent);
+        AggregateLifecycle.apply(productPriceUpdatedEvent);
+    }
 
-
-
-
+    /**
+     * Called when a ProductPriceUpdatedEvent is received by this aggregate.
+     * Updates the price of the product with the value provided in the event.
+     *
+     * @param productPriceUpdatedEvent the event received by this aggregate
+     */
+    @EventSourcingHandler
+    public void on(ProductPriceUpdatedEvent productPriceUpdatedEvent) {
+        this.price = productPriceUpdatedEvent.getPrice();
+    }
 
 }

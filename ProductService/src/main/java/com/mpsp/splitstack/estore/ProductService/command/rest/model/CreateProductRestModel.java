@@ -1,4 +1,4 @@
-package com.mpsp.splitstack.estore.ProductService.command.rest;
+package com.mpsp.splitstack.estore.ProductService.command.rest.model;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

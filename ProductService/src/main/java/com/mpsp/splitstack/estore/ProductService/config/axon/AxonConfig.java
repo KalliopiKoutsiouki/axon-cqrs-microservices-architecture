@@ -1,6 +1,6 @@
 package com.mpsp.splitstack.estore.ProductService.config.axon;
 
-import com.mpsp.splitstack.estore.ProductService.command.interceptors.CreateProductCommandInterceptor;
+import com.mpsp.splitstack.estore.ProductService.command.interceptors.ProductCommandInterceptor;
 import com.mpsp.splitstack.estore.ProductService.core.errorhandling.ProductServiceEventsErrorHandler;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.config.EventProcessingConfigurer;
@@ -16,12 +16,12 @@ public class AxonConfig {
      * of the commands.
      *
      * @param commandBus the CommandBus instance to which the interceptor will be registered
-     * @param createProductCommandInterceptor the interceptor instance that will be used to handle
+     * @param productCommandInterceptor the interceptor instance that will be used to handle
      *                                        command dispatching logic
      */
     @Autowired
-    public void registerCommandInterceptor(CommandBus commandBus, CreateProductCommandInterceptor createProductCommandInterceptor) {
-        commandBus.registerDispatchInterceptor(createProductCommandInterceptor);
+    public void registerCommandInterceptor(CommandBus commandBus, ProductCommandInterceptor productCommandInterceptor) {
+        commandBus.registerDispatchInterceptor(productCommandInterceptor);
     }
 
     /**
