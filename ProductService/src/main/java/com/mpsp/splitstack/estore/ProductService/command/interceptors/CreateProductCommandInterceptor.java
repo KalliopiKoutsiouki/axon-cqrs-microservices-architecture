@@ -1,7 +1,6 @@
 package com.mpsp.splitstack.estore.ProductService.command.interceptors;
 
 import com.mpsp.splitstack.estore.ProductService.command.CreateProductCommand;
-import com.mpsp.splitstack.estore.ProductService.command.ProductLookUpEventsHandler;
 import com.mpsp.splitstack.estore.ProductService.command.utils.CreateCommandValidator;
 import com.mpsp.splitstack.estore.ProductService.core.data.ProductLookUpEntity;
 import com.mpsp.splitstack.estore.ProductService.core.data.ProductLookUpRepository;
@@ -29,7 +28,7 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
     @Nonnull
     @Override
     // returns a function that accepts 2 args and produces a result
-    // according to the documentation these handle method need to return the function that processes messages
+    // according to the documentation this handle method needs to return the function that processes messages
     // based on their position in the list
     // Integer -> command index
     // CommandMessage -> result of the function
@@ -40,7 +39,7 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
             if (CreateProductCommand.class.equals(command.getPayloadType())){
                 CreateCommandValidator.validateCreateProductCommand((CreateProductCommand) command.getPayload());
                 ProductLookUpEntity productLookUpEntity =productLookUpRepository.findByProductIdOrTitle(((CreateProductCommand) command.getPayload()).getProductId(), ((CreateProductCommand) command.getPayload()).getTitle());
-                if(productLookUpEntity != null){ throw new IllegalArgumentException("Product already exists");}
+                if(productLookUpEntity != null){ throw new IllegalStateException("Product already exists");}
             }
             return command;
         };

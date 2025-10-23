@@ -28,15 +28,7 @@ public class ProductsCommandController {
                 .quantity(restModel.getQuantity())
                 .productId(UUID.randomUUID().toString())
                 .build();
-        String returnValue;
-        try {
-            //dispatches the command to the Command Bus - returns a completable object immediately
-            //the command bus finds the responsible @CommandHandler
-            returnValue = commandGateway.sendAndWait(createProductCommand);
-        } catch (Exception e) {
-            returnValue = e.getMessage();
-        }
-
+        String returnValue = commandGateway.sendAndWait(createProductCommand); //dispatches the command to the command bus
         return "HTTP POST Handled: " + returnValue;
     }
 }
