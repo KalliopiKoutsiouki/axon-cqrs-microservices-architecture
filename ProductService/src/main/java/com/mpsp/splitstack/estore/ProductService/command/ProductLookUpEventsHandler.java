@@ -5,6 +5,7 @@ import com.mpsp.splitstack.estore.ProductService.core.data.ProductLookUpReposito
 import com.mpsp.splitstack.estore.ProductService.core.events.ProductCreatedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventhandling.ResetHandler;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,11 @@ public class ProductLookUpEventsHandler {
     public void on(ProductCreatedEvent event){
         ProductLookUpEntity productLookUpEntity = new ProductLookUpEntity(event.getProductId(), event.getTitle());
         productLookUpRepository.save(productLookUpEntity);
+    }
+
+    @ResetHandler
+    public void on() {
+        productLookUpRepository.deleteAll();
     }
 
 

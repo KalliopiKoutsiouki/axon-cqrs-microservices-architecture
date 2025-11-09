@@ -1,10 +1,10 @@
 package com.mpsp.splitstack.estore.ProductService.command;
 
-import com.mpsp.splitstack.estore.ProductService.core.data.ProductLookUpEntity;
 import com.mpsp.splitstack.estore.ProductService.core.data.ProductPricingEntity;
 import com.mpsp.splitstack.estore.ProductService.core.data.ProductPricingRepository;
 import com.mpsp.splitstack.estore.ProductService.core.events.ProductCreatedEvent;
 import org.axonframework.config.ProcessingGroup;
+import org.axonframework.eventhandling.DisallowReplay;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +21,7 @@ public class ProductsPricingEventsHandler {
         this.productPricingRepository = productPricingRepository;
     }
 
+    @DisallowReplay
     @EventHandler
     public void on(ProductCreatedEvent event){
         BigDecimal priceAfterSurcharge = event.getPrice().multiply(BigDecimal.ONE.add(SURCHARGE_RATE));

@@ -6,6 +6,7 @@ import com.mpsp.splitstack.estore.ProductService.core.events.ProductCreatedEvent
 import com.mpsp.splitstack.estore.ProductService.core.events.ProductPriceUpdatedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventhandling.ResetHandler;
 import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -83,8 +84,6 @@ public class ProductEventsHandler {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(event, productEntity);
         productsRepository.save(productEntity);
-
-//        if(true) throw new Exception("Error coming from ProductEventsHandler");
     }
 
     @EventHandler
@@ -93,5 +92,10 @@ public class ProductEventsHandler {
             product.setPrice(event.getPrice());
             productsRepository.save(product);
         });
+    }
+
+    @ResetHandler
+    public void on() {
+        productsRepository.deleteAll();
     }
 }
